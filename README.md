@@ -18,7 +18,7 @@
 > [!CAUTION]
 >Данные действия нужно проделывать каждый раз, когда Steam обновляет игру (а именно сам файл Assembly-CSharp.dll).
 
-1. Скачайте и распакуйте dnSpy.
+1. Скачайте и распакуйте dnSpy: https://github.com/dnSpyEx/dnSpy/releases/download/v6.5.1/dnSpy-net-win64.zip
 2. Запустите dnSpy.exe.
 3. Откройте в редакторе файл игры Assembly-CSharp.dll (находится в папке .../BongoCat/BongoCat_Data/Managed/).
 4. В панели слева разверните дерево: Assembly-CSharp -> Assembly-CSharp.dll. Далее выберите то, что вам нужно отредактировать.
@@ -35,55 +35,9 @@
 this._shopItem.Buy();
 ```
 <p>В коде:</p>
+<img width="1300" height="730" alt="image" src="https://github.com/user-attachments/assets/94e16db3-55fd-47a6-8415-0b14e737d84d" />
 
-```
-private IEnumerator TimerUpdate()
-{
-	for (;;)
-	{
-		if (this._outOfStockObj.activeSelf)
-		{
-			this.StockRefreshTimeLeft--;
-			PlayerPrefs.SetInt(this._shopTimeKey, this.StockRefreshTimeLeft);
-			this._stockRefreshText.text = string.Format("{0:mm':'ss}", TimeSpan.FromSeconds((double)this.StockRefreshTimeLeft));
-			SteamItemDetails_t chestToken = this._isEmoteShop ? CatInventory.Instance.EmoteChestToken : CatInventory.Instance.ChestToken;
-			if (this.StockRefreshTimeLeft <= 0)
-			{
-				if (chestToken.m_unQuantity == 0)
-				{
-					this.StockRefreshTimeLeft = 60;
-				}
-				else
-				{
-					this.StockRefreshTimeLeft = 0;
-					this._shopItem.gameObject.SetActive(true);
-					this._outOfStockObj.SetActive(false);
-					this.ChestIsReady = true;
-					if (this._showChestPopup.Value && this._shopItem.CanBuy())
-					{
-						if (!this._isEmoteShop)
-						{
-							SteamMultiplayer.Instance.SendChestReady(this.ChestIsReady);
-						}
-						this._shopVisuals.SetActive(true);
-					}
-					this._shopItem.Buy();
-				}
-			}
-		}
-		else if (this.StockRefreshTimeLeft <= 0 && !this._shopVisuals.activeInHierarchy && this._showChestPopup.Value && this._shopItem.CanBuy())
-		{
-			if (!this._isEmoteShop)
-			{
-				SteamMultiplayer.Instance.SendChestReady(this.ChestIsReady);
-			}
-			this._shopVisuals.SetActive(true);
-		}
-		yield return new WaitForSecondsRealtime(1f);
-	}
-	yield break;
-}
-```
+
 <br><br><br>
 
 
@@ -96,36 +50,8 @@ int num = UnityEngine.Random.Range(0, WinKeyHook.BUTTONS.Length);
 WinKeyHook.IsDown[num] = true;
 ```
 <p>В коде:</p>
+<img width="1300" height="730" alt="image" src="https://github.com/user-attachments/assets/5b5c8a3a-d03a-48c6-a7eb-fbec0d14abb1" />
 
-```
-public int ProcessInput(bool ignoreMouse)
-{
-	for (int i = 0; i < WinKeyHook.BUTTONS.Length; i++)
-	{
-		WinKeyHook.IsDown[i] = false;
-		if (!ignoreMouse || (WinKeyHook.BUTTONS[i] != 1 && WinKeyHook.BUTTONS[i] != 2 && WinKeyHook.BUTTONS[i] != 4 && WinKeyHook.BUTTONS[i] != 6 && WinKeyHook.BUTTONS[i] != 5))
-		{
-			short val = WinKeyHook.GetAsyncKeyState(WinKeyHook.BUTTONS[i]);
-			if (!WinKeyHook.WasPressed[i] && val == -32768)
-			{
-				WinKeyHook.WasPressed[i] = true;
-				WinKeyHook.IsDown[i] = true;
-			}
-			else if (WinKeyHook.WasPressed[i] && val == 0)
-			{
-				WinKeyHook.WasPressed[i] = false;
-			}
-		}
-	}
-	int num = UnityEngine.Random.Range(0, WinKeyHook.BUTTONS.Length);
-	WinKeyHook.IsDown[num] = true;
-	if (!WinKeyHook.AnyButtonPressed())
-	{
-		return 0;
-	}
-	return WinKeyHook.IsDown.Count((bool x) => x);
-}
-```
 <p align="center">╚═══ ТАЙМИНГ АВТОКЛИКА ═══╝</p>
 
 	
@@ -139,16 +65,8 @@ int randomInterval = new System.Random().Next(110, 1100);
 this._timer.Change(randomInterval, randomInterval);
 ```
 <p>В коде:</p>
+<img width="1300" height="730" alt="image" src="https://github.com/user-attachments/assets/dfda5a8a-7708-4311-a4cf-51a2af67a116" />
 
-```
-private void Process()
-{
-	this.ProcessControllerInput();
-	this._keysDown += this._platformHook.ProcessInput(this._ignoreMouse.Value);
-	int randomInterval = new System.Random().Next(110, 1100);
-	this._timer.Change(randomInterval, randomInterval);
-}
-```
 <br><br><br>
 
 
@@ -191,48 +109,8 @@ if (this.IDtoEmoteEntry.Count > 0)
 }
 ```
 <p>В коде:</p>
+<img width="1300" height="730" alt="image" src="https://github.com/user-attachments/assets/94381c07-9ae6-421b-b3ae-32b85d8be374" />
 
-```
-private void Update()
-{
-	bool shouldShow = false;
-	Vector2 mousePos = Input.mousePosition;
-	foreach (object obj in this.emoteEntryParent)
-	{
-		Transform child = (Transform)obj;
-		Vector2 childScreenPos = RectTransformUtility.WorldToScreenPoint(null, child.position);
-		if (Vector2.Distance(mousePos, childScreenPos) < this._interactionDistance * this._scaleSetting.GetScale())
-		{
-			shouldShow = true;
-			break;
-		}
-	}
-	if (shouldShow)
-	{
-		this.Open();
-		return;
-	}
-	if (this.IDtoEmoteEntry.Count > 0)
-	{
-		int counter = PlayerPrefs.GetInt("AutoClickCounter", -1);
-		if (counter < 0)
-		{
-			counter = UnityEngine.Random.Range(30, 300);
-		}
-		counter--;
-		PlayerPrefs.SetInt("AutoClickCounter", counter);
-		if (counter < 0)
-		{
-			List<EmoteDonutEntry> entries = new List<EmoteDonutEntry>(this.IDtoEmoteEntry.Values);
-			if (entries.Count > 0)
-			{
-				entries[UnityEngine.Random.Range(0, entries.Count)].SpawnEmoteParticle();
-			}
-		}
-	}
-	this.Close();
-}
-```
 <br><br><br>
 
 
@@ -258,30 +136,5 @@ base.StartCoroutine(((Func<IEnumerator>)(() => {
 }))());
 ```
 <p>В коде:</p>
+<img width="1300" height="730" alt="image" src="https://github.com/user-attachments/assets/62f65ddc-1156-4cc4-9fcd-3609a730ad68" />
 
-```
-public void OnOpenExchange()
-		{
-			if (!SteamManager.s_EverInitialized)
-			{
-				return;
-			}
-			this.IsVisible = true;
-			List<SteamItem> duplicates = this.GetDuplicates();
-			QualityCategoryWithInfo slotDuplicateQuality = this.GetSlotDuplicateQuality(duplicates);
-			this._fillDuplicatesFill.color = this._qualityColors.GetColor(slotDuplicateQuality.ToQuality());
-			CatInventory.Instance.UpdateItemsUI();
-			base.StartCoroutine(((Func<IEnumerator>)(() => {
-				IEnumerator routine() {
-					while (this.HasDuplicates()) {
-						this.SlotDuplicates();
-						this.UpdateInteractable();
-						this.TryExchange();
-						yield return new WaitUntil(() => this._exchangeCompleted);
-						this._exchangeCompleted = false;
-					}
-				}
-				return routine();
-			}))());
-		}
-```
