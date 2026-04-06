@@ -1,7 +1,7 @@
 <h2>ФУНКЦИИ:</h2>
 
 - 🎁 Открытие подарков
-- 👆 Клики
+- 👆 Клики (225.000 клик/ч - 49.500.000 клик/ч)
 - 💬 Отправку эмодзи
 - 📦 Крафт из 10 дубликатов
 
@@ -32,6 +32,8 @@
 
 <br><br><br>
 <h1 align="center">АВТОСУНДУК</h1>
+
+>Механика: по нажатию Numpad 5 меняется режим клика: "одна рандомная клавиша" (225.000 клик/ч) или "220 клавиш" (все, которые знает игра - 49.500.000 клик/ч). Интервал между кликами настраивается в разделе «ТАЙМИНГ АВТОКЛИКА».
 <p>Добавить строку в BongoCat > Shop > TimerUpdate:</p>
 
 ```
@@ -45,14 +47,32 @@ this._shopItem.Buy();
 <p>Добавить строки в GlobalKeyHook > WinKeyHook > ProcessInput:</p>
 
 ```
-int num = UnityEngine.Random.Range(0, WinKeyHook.BUTTONS.Length);
-WinKeyHook.IsDown[num] = true;
+public static bool ActivateAllMode = false;
+```
+```
+if (GetAsyncKeyState(0x65) != 0)
+{
+	System.Threading.Thread.Sleep(150);
+	ActivateAllMode = !ActivateAllMode;
+}
+```
+```
+if (ActivateAllMode)
+{
+	for (int i = 0; i < WinKeyHook.IsDown.Length; i++)
+		WinKeyHook.IsDown[i] = true;
+}
+else
+{
+	int num = UnityEngine.Random.Range(0, WinKeyHook.BUTTONS.Length);
+	WinKeyHook.IsDown[num] = true;
+}
 ```
 <p>В коде:</p>
-<img width="1300" height="730" alt="image" src="https://github.com/user-attachments/assets/5b5c8a3a-d03a-48c6-a7eb-fbec0d14abb1" />
+<img width="1300" height="964" alt="image" src="https://github.com/user-attachments/assets/49e8e6fe-7f5e-42e5-853d-d894c567acbd" />
 <p align="center">╚═══ ТАЙМИНГ АВТОКЛИКА ═══╝</p>
 
->НЕОБЯЗАТЕЛЬНО. Если не добавлять эту часть, клики будут происходить с интервалом, с которым игра проверяет нажатия клавиш, а именно — 16 мс (что эквивалентно 225 000 кликов в час). Я рекомендую увеличить этот интервал и добавить немного рандома. В моём коде по умолчанию настроен случайный интервал от 110 до 1100 мс. Этого более чем достаточно, чтобы без проблем открывать по два подарка каждые полчаса. Вы можете изменить эти значения под себя.	
+>НЕОБЯЗАТЕЛЬНО: по умолчанию клики идут с интервалом проверки игры в 16 мс. Если ваша цель не фарм достижений, а подарки - рекомендую увеличить интервал и добавить рандом (симуляция ввода). Ниже в коде настроен случайный интервал 110–1100 мс: этого достаточно, чтобы открывать по два подарка каждые полчаса в режиме "одна рандомная клавиша".
 <p>Добавить строки в BongoCat.OSSpecific > GlobalKeyHook > Process:</p>
 
 ```
