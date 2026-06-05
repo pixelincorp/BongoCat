@@ -133,17 +133,19 @@ if (this.IDtoEmoteEntry.Count > 0)
 ```
 base.StartCoroutine(((Func<IEnumerator>)(() => {
     IEnumerator routine() {
-        while (this.HasDuplicates()) {
+        yield return new WaitForSeconds(0.5f);
+        while (this.IsVisible && this.HasDuplicates()) {
             this.SlotDuplicates();
             this.UpdateInteractable();
+            if (!this._exchangeButton.interactable) break;
             this.TryExchange();
-            yield return new WaitUntil(() => this._exchangeCompleted);
-            this._exchangeCompleted = false;
+            yield return new WaitForSeconds(0.5f);
         }
     }
     return routine();
 }))());
 ```
 <p>В коде:</p>
-<img width="1300" height="730" alt="image" src="https://github.com/user-attachments/assets/62f65ddc-1156-4cc4-9fcd-3609a730ad68" />
+<img width="1300" height="730" alt="image" src="https://github.com/user-attachments/assets/624b8bdd-38dc-4a33-ac82-4a69d1746b4a" />
+
 
