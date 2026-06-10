@@ -128,7 +128,7 @@ if (this.IDtoEmoteEntry.Count > 0)
 <h1 align="center">АВТОКРАФТ</h1>
 
 >Механика: процесс крафта активируется автоматически при открытии вкладки "Обмен". Вам не нужно нажимать дополнительные кнопки — скрипт сработает сам, как только вы перейдете в соответствующий раздел меню.
-<p>Добавить строки в BongoCat > ItemExchange > OnOpenExchange:</p>
+<p>Добавить строки в BongoCat > ItemExchange > OpenExchange:</p>
 
 ```
 base.StartCoroutine(((Func<IEnumerator>)(() => {
