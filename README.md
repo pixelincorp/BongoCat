@@ -43,7 +43,7 @@
 this._shopItem.Buy();
 ```
 <p>В коде:</p>
-<img width="1300" height="730" alt="image" src="https://github.com/user-attachments/assets/94e16db3-55fd-47a6-8415-0b14e737d84d" />
+<img width="1300" height="730" alt="image" src="https://github.com/user-attachments/assets/b0a3ad7a-481f-4b6a-a479-cca04bfa916a" />
 <br><br><br>
 			
 <h1 align="center">АВТОКЛИК</h1>
